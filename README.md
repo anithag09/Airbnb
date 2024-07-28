@@ -31,7 +31,6 @@ This project allows users to visualize and explore Airbnb data, including availa
     pip install -r required packages
     ```
 3. **Run the Streamlit Application**   
-    Run the Streamlit app using the following command:
     ```bash
     streamlit run Airbnb.py
     ```
@@ -40,9 +39,9 @@ This project allows users to visualize and explore Airbnb data, including availa
 1. Home Page
  The home page provides an introduction to the project and the tools used. It includes the following sections:
 
-- Domain: Travel Industry, Property Management, and Tourism
-- Tools Used: Lists the tools and technologies utilized in the project
-- About the Project: A brief description of the project's goals
+  - Domain: Travel Industry, Property Management, and Tourism
+  - Tools Used: Lists the tools and technologies utilized in the project
+  - About the Project: A brief description of the project's goals
 
 2. Explore Insights
  The Explore Insights section is divided into two parts: General Insights and Filtered Insights.
