@@ -1,14 +1,14 @@
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
 import streamlit as st
 from streamlit_option_menu import option_menu
 from PIL import Image 
 import plotly_express as px
 
 # Load Image 
-img = Image.open(r"/Users/anithasmac/Downloads/airbnb.png") 
-bnb = pd.read_csv('/Users/anithasmac/PycharmProjects/Airbnb/Airbnb.csv')
+img = Image.open(r"/Users/****/Downloads/airbnb.png") 
+path = '/Users/*****/PycharmProjects/Airbnb/Airbnb.csv'
+bnb = pd.read_csv(path)
+
 
 # Streamlit code
 st.set_page_config(page_title='Airbnb Analysis', layout='wide')
@@ -28,7 +28,15 @@ if selected == 'Home':
     st.write(' ')
     st.markdown("### :blue[Domain:] Travel Industry, Property Management and Tourism")
     st.markdown("### :blue[Tools Used:] Github, Pandas, Data Preprocessing, EDA, Streamlit, Tableau")
-    st.markdown("### :blue[About the Project:] This project is designed to visualize and explore Airbnb transaction and user data across various regions. It leverages several powerful tools including Streamlit for interactive web applications, Plotly for rich visualizations, and MySQL for database management. The data is sourced from JSON files that represent various metrics for different states, years, and quarters.")
+    st.markdown("### :blue[About the Project:] This project provides a comprehensive analysis of Airbnb data, offering both general and filtered insights through interactive visualizations. It helps in understanding the trends and patterns in the Airbnb market, aiding in better decision-making for hosts and travelers alike.")
+    # Add dataset download section
+    st.markdown("### :blue[Dataset:]")
+    st.download_button(
+        label="Download the data file",
+        data=open(path, 'rb'),
+        file_name='Airbnb.csv'
+    )
+
 
 if selected == 'Explore Insights':
     if explore_selected == 'General Insights':
@@ -38,9 +46,8 @@ if selected == 'Explore Insights':
 
         with tab1:
             # Availability and price by country 
-            top_destinations = bnb.groupby('country')['availability'].sum().reset_index()
-            destinations = bnb.groupby('country')['price'].mean().round(0).reset_index()
-            grouped_data = pd.merge(top_destinations, destinations, on='country')
+            grouped_data = bnb.groupby('country').agg({'availability': 'sum',
+                                                    'price': 'mean'}).round().reset_index()
             fig1 = px.scatter_geo(
                 grouped_data,
                 locations='country', 
@@ -51,8 +58,9 @@ if selected == 'Explore Insights':
                 title='Availability and Average Price by Country',
                 color='price',
                 color_continuous_scale=px.colors.sequential.Bluered_r,
-                projection="natural earth", 
-                width=800, height=800
+                projection='natural earth', 
+                width=800, height=800,
+                labels={'price': 'Price ($)', 'availability': 'Availability'}
             )
             st.plotly_chart(fig1)
 
@@ -79,9 +87,12 @@ if selected == 'Explore Insights':
             )
             st.plotly_chart(fig3)
 
-            # Accomodation by room type
-            accommodates = bnb.groupby('room_type')['accommodates'].mean().round().reset_index()
-            fig4 = px.bar(accommodates, x='room_type', y='accommodates', title='People Accommodation by Room Type', labels={'room_type': 'Room Type', 'accommodates': 'Max No. Of Persons'}, color_discrete_sequence=px.colors.sequential.Oryel_r)
+            # Accomodation vs price by room type
+            accommodates = bnb.groupby('room_type').agg({
+                'price': 'mean',
+                'accommodates': 'mean'
+            }).round().reset_index()
+            fig4 = px.bar(accommodates, x='room_type', y='accommodates', title='People Accommodation by Room Type', color='price', labels={'room_type': 'Room Type', 'accommodates': 'Max No. Of Persons', 'price': 'Price ($)'}, hover_data={'price': True, 'accommodates': True, 'room_type': False})
             st.plotly_chart(fig4)
 
     if explore_selected == 'Filtered Insights':
@@ -108,6 +119,14 @@ if selected == 'Explore Insights':
                 values='count',
                 title='Distribution of Property Types by Country',
                 labels={'property_type': 'Property Type', 'count': 'Count'}
+            )
+
+            fig2.update_traces(
+            textposition='inside',  # Ensures text is inside slices
+            textinfo='percent+label',  # Shows both percentage and label
+            insidetextorientation='radial',  # Ensures text orientation is radial
+            textfont=dict(size=14, color='white'),  # Increases font size and changes color to white
+            marker=dict(line=dict(color='black', width=1))  # Adds a black border around slices
             )
             st.plotly_chart(fig2)
 
