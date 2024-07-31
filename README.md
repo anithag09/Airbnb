@@ -66,3 +66,7 @@ This section allows users to filter the data by country and property type to gai
   
   Property-Based Insights:
   Accommodates vs Price by Property Type: A scatter plot showing the relationship between the number of accommodates and price for selected property types and countries.
+
+
+### View the Tableau Dashboard
+[View Here](https://public.tableau.com/app/profile/anitha.gopalakrishnan/viz/Airbnb_17223169047450/AirBNB?publish=yes) 
